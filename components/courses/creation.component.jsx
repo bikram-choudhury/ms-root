@@ -1,7 +1,26 @@
 import React, { Component } from 'react';
 import Table from 'react-bootstrap/Table';
+import InputComponent from '../common/input.component.jsx';
+import ButtonComponent from '../common/button.component.jsx';
 
 export default class CreationComponent extends Component {
+    constructor(){
+        super();
+        this.state = {
+            course: ''
+        };
+        this.handleChange = this.handleChange.bind(this);
+        this.handleAddCourse = this.handleAddCourse.bind(this);
+    }
+    handleChange(event) {
+        this.setState({course: event.target.value});
+    }
+    handleAddCourse(event) {
+        console.log(`Course Name: ${this.state.course}`);
+    }
+    handleReset = (event) => {
+        this.setState({course: ''});
+    }
     render() {
         return (
             <div className="container course-container">
@@ -10,12 +29,12 @@ export default class CreationComponent extends Component {
                         <h3>Add Course </h3>
                         <form>
                             <div className="form-group">
-                                <input type="text" className="form-control" placeholder="Course Name *" defaultValue="" />
+                                <InputComponent type="text" classList="form-control" placeholder="Course Name *" value={this.state.course} onChange={this.handleChange} />
                             </div>
                             
                             <div className="form-group">
-                                <input type="submit" className="btnSubmit" value="Add" />
-                                <input type="button" className="btnSubmit" value="Reset" />
+                                <ButtonComponent type="button" classList="btnSubmit" value="Add" onClick={this.handleAddCourse} />
+                                <ButtonComponent type="button" classList="btnSubmit" value="Reset" onClick={this.handleReset} />
                             </div>
                         </form>
                     </div>
