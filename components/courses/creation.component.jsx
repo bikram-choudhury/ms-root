@@ -18,9 +18,9 @@ export default class CreationComponent extends Component {
     handleAddCourse(event) {
         console.log(`Course Name: ${this.state.course}`);
     }
-    handleReset = (event) => {
+    /*handleReset = (event) => {
         this.setState({course: ''});
-    }
+    }*/
     render() {
         return (
             <div className="container course-container">

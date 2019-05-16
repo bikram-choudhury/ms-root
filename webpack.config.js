@@ -1,13 +1,11 @@
+const path = require('path');
+
 const config = {
     mode: "development",
     entry: "./main.js",
     output: {
-        path: '/',
+        path: path.resolve(__dirname, 'public'),
         filename: 'index.js'
-    },
-    devServer: {
-        inline: true,
-        port: 5000
     },
     module: {
         rules: [
@@ -22,8 +20,7 @@ const config = {
                         { "plugins": ["@babel/plugin-proposal-class-properties"] }
                     ]
                 }
-            },
-            {
+            }, {
                 test: /\.(scss|css)$/,
                 use: ['style-loader', 'css-loader', 'sass-loader']
             }

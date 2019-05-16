@@ -1,23 +1,29 @@
 {
-  "name": "reactdemo",
+  "name": "ms-root",
   "version": "1.0.0",
-  "description": "",
+  "description": "Course/session management application",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --hot",
+    "start-server": "webpack && nodemon --exec babel-node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@babel/core": "^7.4.4",
+    "@babel/node": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.5",
+    "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0",
     "bootstrap": "^4.3.1",
     "css-loader": "^2.1.1",
+    "express": "^4.16.4",
     "node-sass": "^4.12.0",
+    "nodemon": "^1.19.0",
     "react": "^16.8.6",
     "react-bootstrap": "^1.0.0-beta.8",
     "react-dom": "^16.8.6",
@@ -26,5 +32,9 @@
     "webpack": "^4.30.0",
     "webpack-cli": "^3.3.2",
     "webpack-dev-server": "^3.3.1"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-es2015-modules-amd": "^6.24.1",
+    "babel-preset-react": "^6.24.1"
   }
 }
