@@ -3,6 +3,8 @@ import HeaderComponent from './header/header.component.jsx';
 import FooterComponent from './footer/footer.component.jsx';
 import ManageCourseComponent from './courses/manage.course.component.jsx';
 
+import './../style.scss';
+
 export default class AppComponent extends Component {
     render() {
         return (
