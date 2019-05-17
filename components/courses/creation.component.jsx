@@ -1,26 +1,44 @@
 import React, { Component } from 'react';
-import Table from 'react-bootstrap/Table';
 import InputComponent from '../common/input.component.jsx';
 import ButtonComponent from '../common/button.component.jsx';
+import TableComponent from '../common/table.component.jsx';
 
 export default class CreationComponent extends Component {
     constructor(){
         super();
         this.state = {
-            course: ''
+            course: '',
+            courseList: []
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleAddCourse = this.handleAddCourse.bind(this);
+        this.handleCourseDeleteAction = this.handleCourseDeleteAction.bind(this);
     }
     handleChange(event) {
         this.setState({course: event.target.value});
     }
-    handleAddCourse(event) {
-        console.log(`Course Name: ${this.state.course}`);
+    handleCourseDeleteAction(courseId) {
+        const state = this.state;
+        const courseList = state.courseList.filter(course => course.id !== courseId);
+        this.setState({...state, courseList});
     }
-    /*handleReset = (event) => {
+    handleAddCourse(event) {
+        if (this.state.course) {
+            const courseList = this.state.courseList;
+            const isExist = courseList.findIndex(course => course.courseName.toLowerCase() === this.state.course.toLowerCase())
+            console.log(`isExist: ${isExist}`);
+            if (isExist == -1) {
+                courseList.push({
+                    id: courseList.length + 1,
+                    courseName: this.state.course
+                })
+                this.setState({courseList: courseList, course: ''});
+            }
+        }
+    }
+    handleReset = (event) => {
         this.setState({course: ''});
-    }*/
+    }
     render() {
         return (
             <div className="container course-container">
@@ -38,38 +56,15 @@ export default class CreationComponent extends Component {
                             </div>
                         </form>
                     </div>
-                    <div className="col-md-6 form-bg-light">
-                        <h3>Course Nav List</h3>
-                        <Table striped bordered hover>
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Username</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td colSpan="2">Larry the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                            </tbody>
-                        </Table>
-                    </div>
+                    {
+                        this.state.courseList.length ? (
+                            <div className="col-md-6 form-bg-light">
+                                <h3>Course Nav List</h3>
+                                <TableComponent courseNavList={this.state.courseList} courseDeleteAction={this.handleCourseDeleteAction} />
+                            </div>
+                        ): ''
+                    }
+                    
                 </div>
             </div>
         )
