@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import HeaderComponent from './header/header.component.jsx';
 import FooterComponent from './footer/footer.component.jsx';
 import ManageCourseComponent from './courses/manage.course.component.jsx';
-
+import ManageRregistrationComponent from './registration/manage.registration.component.jsx';
 import './../style.scss';
 
 export default class AppComponent extends Component {
@@ -12,6 +12,7 @@ export default class AppComponent extends Component {
                 <HeaderComponent />
                 <ManageCourseComponent />
                 <FooterComponent />
+                <ManageRregistrationComponent />
             </section>
         )
     }
