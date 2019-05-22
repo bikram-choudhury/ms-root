@@ -1,104 +1,238 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
+import InputComponent from "../common/input.component.jsx";
+import ButtonComponent from "../common/button.component.jsx";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 
+const initialState = {
+  studentName: "",
+  instituteName: "",
+  mobileNumber: "",
+  email: "",
+  batchType: "",
+  sessionDuration: "",
+  studentNameError: "",
+  instituteNameError: "",
+  mobileNumberError: "",
+  emailError: "",
+  sessionDurationError: "",
+  batchTypeError: ""
+};
+
 export default class StudentregComponent extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { value: "" };
+  constructor() {
+    super();
+    this.state = { ...initialState };
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+    this.handleReset = this.handleReset.bind(this);
+    this.validate = this.validate.bind(this);
   }
 
   handleChange(event) {
-    this.setState({ value: event.target.value });
+    const name = event.target.getAttribute("name");
+    const state = this.state;
+    state[name] = event.target.value;
+    if (event.target.value != "") {
+      state[name + "Error"] = "";
+    }
+    this.setState(state);
+  }
+  handleSave() {
+    if (this.validate()) {
+      // Do HTTP call to staore the data
+      this.handleReset();
+    }
+  }
+  handleReset() {
+    this.setState({ ...initialState });
   }
 
-  handleSubmit(event) {
-    alert("A name was submitted: " + this.state.value);
-    event.preventDefault();
+  validate() {
+    let studentNameError = "",
+      instituteNameError = "",
+      mobileNumberError = "",
+      emailError = "",
+      batchTypeError = "",
+      sessionDurationError = "";
+
+    if (!this.state.studentName) {
+      studentNameError = "Student name cannot be blank";
+    }
+    if (!this.state.instituteName) {
+      instituteNameError = "institute name cannot be blank";
+    }
+    if (!this.state.mobileNumber) {
+      mobileNumberError = "mobile number cannot be blank";
+    }
+    if (!this.state.email.includes("@")) {
+      emailError = "invalid email";
+    }
+    if (!this.state.batchType) {
+      batchTypeError = "Please select batch Type";
+    }
+    if (!this.state.sessionDuration) {
+      sessionDurationError = "Please add session duration";
+    }
+    if (
+      emailError ||
+      studentNameError ||
+      instituteNameError ||
+      mobileNumberError ||
+      sessionDurationError ||
+      batchTypeError
+    ) {
+      this.setState({
+        emailError,
+        studentNameError,
+        instituteNameError,
+        mobileNumberError,
+        batchTypeError,
+        sessionDurationError
+      });
+      return false;
+    }
+
+    return true;
   }
   render() {
     return (
       <Form onSubmit={this.handleSubmit}>
-        <Form.Group as={Row} controlId="formHorizontalEmail">
+        <Form.Group as={Row} controlId="formHorizontalStudentName">
           <Form.Label column sm={2}>
-          Student Name:
+            Student Name:
           </Form.Label>
           <Col sm={10}>
-            <Form.Control type="text" value={this.state.value}
-              onChange={this.handleChange} />
+            <InputComponent
+              type="text"
+              value={this.state.studentName}
+              placeholder="Student Name"
+              onChange={this.handleChange}
+              classList="form-control"
+              name="studentName"
+            />
+            <div style={{ fontSize: 12, color: "red" }}>
+              {this.state.studentNameError}
+            </div>
           </Col>
         </Form.Group>
 
-        <Form.Group as={Row} controlId="formHorizontalPassword">
+        <Form.Group as={Row} controlId="formHorizontalInstituteName">
           <Form.Label column sm={2}>
-          Institute Name:
+            Institute Name:
           </Form.Label>
           <Col sm={10}>
-            <Form.Control type="text"
-              value={this.state.value}
-              onChange={this.handleChange} />
+            <InputComponent
+              type="text"
+              value={this.state.instituteName}
+              placeholder="Institute Name"
+              onChange={this.handleChange}
+              classList="form-control"
+              name="instituteName"
+            />
+            <div style={{ fontSize: 12, color: "red" }}>
+              {this.state.instituteNameError}
+            </div>
           </Col>
         </Form.Group>
-        <Form.Group as={Row} controlId="formHorizontalPassword">
+        <Form.Group as={Row} controlId="formHorizontalMobileNumber">
           <Form.Label column sm={2}>
-          Mobile Number:
+            Mobile Number:
           </Form.Label>
           <Col sm={10}>
-            <Form.Control type="text"
-              value={this.state.value}
-              onChange={this.handleChange} />
+            <InputComponent
+              type="tel"
+              value={this.state.mobileNumber}
+              placeholder="Mobile Number "
+              onChange={this.handleChange}
+              classList="form-control"
+              name="mobileNumber"
+            />
+            <div style={{ fontSize: 12, color: "red" }}>
+              {this.state.mobileNumberError}
+            </div>
           </Col>
         </Form.Group>
-        <Form.Group as={Row} controlId="formHorizontalPassword">
+        <Form.Group as={Row} controlId="formHorizontalEmail">
           <Form.Label column sm={2}>
-          Email:
+            Email:
           </Form.Label>
           <Col sm={10}>
-            <Form.Control type="text"
-                value={this.state.value}
-                onChange={this.handleChange} />
+            <InputComponent
+              type="email"
+              value={this.state.email}
+              placeholder="Email "
+              onChange={this.handleChange}
+              classList="form-control"
+              name="email"
+            />
+            <div style={{ fontSize: 12, color: "red" }}>
+              {this.state.emailError}
+            </div>
           </Col>
         </Form.Group>
         <fieldset>
           <Form.Group as={Row}>
             <Form.Label as="legend" column sm={2}>
-            Batch Type :
+              Batch Type :
             </Form.Label>
             <Col sm={10}>
               <Form.Check
+                inline
                 type="radio"
                 label="Week Days"
-                name="formHorizontalRadios"
-                id="formHorizontalRadios1"
+                name="batchType"
+                value="weekdays"
+                onChange={this.handleChange}
               />
               <Form.Check
+                inline
                 type="radio"
                 label="Week Ends"
-                name="formHorizontalRadios"
-                id="formHorizontalRadios2"
+                name="batchType"
+                value="weekends"
+                onChange={this.handleChange}
               />
+              <div style={{ fontSize: 12, color: "red" }}>
+                {this.state.batchTypeError}
+              </div>
             </Col>
           </Form.Group>
         </fieldset>
-        <Form.Group as={Row} controlId="formHorizontalPassword">
+        <Form.Group as={Row} controlId="formHorizontalSessionDuration">
           <Form.Label column sm={2}>
-          Timmings:
+            Session Duration:
           </Form.Label>
           <Col sm={10}>
-            <Form.Control type="text"
-                value={this.state.value}
-                onChange={this.handleChange} />
+            <InputComponent
+              type="text"
+              value={this.state.sessionDuration}
+              placeholder="Session duration"
+              onChange={this.handleChange}
+              classList="form-control"
+              name="sessionDuration"
+            />
+            <div style={{ fontSize: 12, color: "red" }}>
+              {this.state.sessionDurationError}
+            </div>
           </Col>
         </Form.Group>
 
         <Form.Group as={Row}>
           <Col sm={{ span: 10, offset: 2 }}>
-            <Button type="button" variant="primary">Save</Button>
-            <Button type="button" variant="danger">Reset</Button>
+            <ButtonComponent
+              type="button"
+              classList="btnSubmit"
+              value="Save"
+              onClick={this.handleSave}
+            />
+            <ButtonComponent
+              type="button"
+              classList="btnSubmit"
+              value="Reset"
+              onClick={this.handleReset}
+            />
           </Col>
         </Form.Group>
       </Form>
