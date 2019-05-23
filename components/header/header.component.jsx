@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
+import { Link, NavLink} from 'react-router-dom';
 
 export default class HeaderComponent extends Component {
     render() {
@@ -11,6 +12,10 @@ export default class HeaderComponent extends Component {
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
+                        <Nav className="mr-auto">
+                            <Link to="/" className="nav-link">Home</Link>
+                            <Link to="/register" className="nav-link">Registration</Link>
+                        </Nav>
                         <Navbar.Text>
                             Signed in as: <a href="#login">Bikram Choudhury</a>
                         </Navbar.Text>
