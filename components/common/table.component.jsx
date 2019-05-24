@@ -46,10 +46,10 @@ class TBodyComponent extends Component {
                         (course, index) => {
                             return (
                                 <tr key={index}>
-                                    <td>{course.id}</td>
-                                    <td>{course.courseName}</td>
+                                    <td>{index+1}</td>
+                                    <td>{course.name}</td>
                                     <td>
-                                    <Button variant="outline-danger" onClick={() => this.props.courseDeleteAction(course.id)}>Remove</Button>
+                                    <Button variant="outline-danger" onClick={() => this.props.courseDeleteAction(course._id)}>Remove</Button>
                                     </td>
                                 </tr>
                             )
