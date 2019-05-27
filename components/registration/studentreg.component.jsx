@@ -21,8 +21,8 @@ const initialState = {
 };
 
 export default class StudentregComponent extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = { ...initialState };
     this.handleChange = this.handleChange.bind(this);
     this.handleSave = this.handleSave.bind(this);
@@ -97,8 +97,12 @@ export default class StudentregComponent extends Component {
     return true;
   }
   render() {
+    const courseName = this.props.match.params && this.props.match.params.courseName || '';
+    const courseID = this.props.location.state && this.props.location.state.courseId || '';
     return (
       <Form onSubmit={this.handleSubmit}>
+        <InputComponent type="hidden" value={courseID} name="hidnCrsId" readonly={true} />
+        <h3 className="mb-4"><u>{courseName.toUpperCase()}</u></h3>
         <Form.Group as={Row} controlId="formHorizontalStudentName">
           <Form.Label column sm={2}>
             Student Name:
@@ -221,18 +225,21 @@ export default class StudentregComponent extends Component {
 
         <Form.Group as={Row}>
           <Col sm={{ span: 10, offset: 2 }}>
-            <ButtonComponent
-              type="button"
-              classList="btnSubmit"
-              value="Save"
-              onClick={this.handleSave}
-            />
-            <ButtonComponent
-              type="button"
-              classList="btnSubmit"
-              value="Reset"
-              onClick={this.handleReset}
-            />
+            <div className="btn-group" style={{ 'width': '100%' }}>
+              <ButtonComponent
+                type="button"
+                classList="btn btn-success"
+                value="Save"
+                onClick={this.handleSave}
+              />
+              <ButtonComponent
+                type="button"
+                classList="btn btn-danger"
+                value="Reset"
+                onClick={this.handleReset}
+              />
+            </div>
+
           </Col>
         </Form.Group>
       </Form>
