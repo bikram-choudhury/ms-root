@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 export default class NavComponent extends Component {
   render() {
@@ -27,4 +28,11 @@ export default class NavComponent extends Component {
       </div>
     );
   }
+}
+
+NavComponent.propTypes = {
+  courseList: PropTypes.arrayOf(PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    name: PropTypes.string
+  }))
 }
