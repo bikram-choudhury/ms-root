@@ -10,6 +10,12 @@ export default class InputComponent extends Component {
  }
 }
 
+InputComponent.defaultProps = {
+    type: 'text',
+    placeholder: 'No Value',
+    readonly: false
+}
+
 InputComponent.propTypes = {
     type: PropTypes.string,
     name: PropTypes.string,

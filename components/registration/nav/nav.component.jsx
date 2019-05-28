@@ -30,6 +30,10 @@ export default class NavComponent extends Component {
   }
 }
 
+NavComponent.defaultProps = {
+  courseList: []
+}
+
 NavComponent.propTypes = {
   courseList: PropTypes.arrayOf(PropTypes.shape({
     _id: PropTypes.string.isRequired,
