@@ -4,6 +4,7 @@ import InputComponent from "../common/input.component.jsx";
 import ButtonComponent from "../common/button.component.jsx";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
+import config from '../../config.json';
 
 const initialState = {
   studentName: "",
@@ -28,6 +29,7 @@ export default class StudentregComponent extends Component {
     this.handleSave = this.handleSave.bind(this);
     this.handleReset = this.handleReset.bind(this);
     this.validate = this.validate.bind(this);
+    this.courseAPI = `${config.server.url}/api/enroll-candidate`;
   }
 
   handleChange(event) {
@@ -99,6 +101,7 @@ export default class StudentregComponent extends Component {
   render() {
     const courseName = this.props.match.params && this.props.match.params.courseName || '';
     const courseID = this.props.location.state && this.props.location.state.courseId || '';
+    const enable = courseID ? false: true;
     return (
       <Form onSubmit={this.handleSubmit}>
         <InputComponent type="hidden" value={courseID} name="hidnCrsId" readonly={true} />
@@ -115,6 +118,7 @@ export default class StudentregComponent extends Component {
               onChange={this.handleChange}
               classList="form-control"
               name="studentName"
+              readonly={enable}
             />
             <div style={{ fontSize: 12, color: "red" }}>
               {this.state.studentNameError}
@@ -134,6 +138,7 @@ export default class StudentregComponent extends Component {
               onChange={this.handleChange}
               classList="form-control"
               name="instituteName"
+              readonly={enable}
             />
             <div style={{ fontSize: 12, color: "red" }}>
               {this.state.instituteNameError}
@@ -152,6 +157,7 @@ export default class StudentregComponent extends Component {
               onChange={this.handleChange}
               classList="form-control"
               name="mobileNumber"
+              readonly={enable}
             />
             <div style={{ fontSize: 12, color: "red" }}>
               {this.state.mobileNumberError}
@@ -170,6 +176,7 @@ export default class StudentregComponent extends Component {
               onChange={this.handleChange}
               classList="form-control"
               name="email"
+              readonly={enable}
             />
             <div style={{ fontSize: 12, color: "red" }}>
               {this.state.emailError}
@@ -189,6 +196,7 @@ export default class StudentregComponent extends Component {
                 name="batchType"
                 value="weekdays"
                 onChange={this.handleChange}
+                disabled={enable}
               />
               <Form.Check
                 inline
@@ -197,6 +205,7 @@ export default class StudentregComponent extends Component {
                 name="batchType"
                 value="weekends"
                 onChange={this.handleChange}
+                disabled={enable}
               />
               <div style={{ fontSize: 12, color: "red" }}>
                 {this.state.batchTypeError}
@@ -216,6 +225,7 @@ export default class StudentregComponent extends Component {
               onChange={this.handleChange}
               classList="form-control"
               name="sessionDuration"
+              readonly={enable}
             />
             <div style={{ fontSize: 12, color: "red" }}>
               {this.state.sessionDurationError}
@@ -231,12 +241,14 @@ export default class StudentregComponent extends Component {
                 classList="btn btn-success"
                 value="Save"
                 onClick={this.handleSave}
+                disabled={enable}
               />
               <ButtonComponent
                 type="button"
                 classList="btn btn-danger"
                 value="Reset"
                 onClick={this.handleReset}
+                disabled={enable}
               />
             </div>
 
