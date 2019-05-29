@@ -93,22 +93,6 @@ export default class CreationComponent extends Component {
     render() {
         return (
             <div className="container course-container">
-                <input type="text" name="ref-input" defaultValue="" placeholder="Referance input" ref="refInput" />
-                <button onClick={() => {
-                    console.log("ref points to : ", this.refs.refInput);
-                    console.log(`Value: ${this.refs.refInput.value}`);
-                }}>Get Input properties</button>
-                <button onClick={() => {
-                    this.refs.refInput.placeholder = 'Changed values';
-                }}>Change Placeholder</button>
-                <br />
-                <InputComponent type="text" name="ref-input" defaultValue="" placeholder="Referance inputcomponent" ref="refInputComponent" />
-                <button onClick={() => {
-                    console.log("ref points to : ", this.refs.refInputComponent);
-                    console.log(`Value: ${this.refs.refInputComponent.props.placeholder}`);
-                    this.refs.refInputComponent.props.placeholder = "Changed Values at component";
-                }}>Get Input component properties</button>
-
                 <div className="row">
                     <div className="col-md-6 form-bg-primary">
                         <h3>Add Course </h3>
