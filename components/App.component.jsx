@@ -15,6 +15,7 @@ export default class AppComponent extends Component {
                     <HeaderComponent />
                     <Route exact path="/" component={ManageCourseComponent} />
                     <Route path="/register" component={ManageRregistrationComponent} />
+                    <Route path="/participants" component={ManageRregistrationComponent} />
                     <FooterComponent />
                 </Router>
             </section>

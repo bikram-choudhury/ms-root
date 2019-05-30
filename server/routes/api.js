@@ -97,7 +97,7 @@ router.route('/enroll-candidate')
             }).catch(errorResponse => res.status(500).send(errorResponse));
 
     }, (req, res, next) => {
-        const data = {... req.body};
+        const data = { ...req.body };
         const enroll = new enrollcandidates(data);
         enroll.save((err, doc) => {
             if (err) {
@@ -109,6 +109,18 @@ router.route('/enroll-candidate')
         });
     }, format_service_data);
 
+router.route('/enroll-candidate/:courseID')
+    .get((req, res, next) => {
+        const courseId = req.params.courseID;
+        enrollcandidates.find({courseId: courseId}, null, { lean: true }, (err, candidateList) => {
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                req.mongoObj = candidateList;
+                next();
+            }
+        });
+    }, format_service_data)
 
 module.exports = router;
 

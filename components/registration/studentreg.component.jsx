@@ -7,6 +7,7 @@ import ButtonComponent from "../common/button.component.jsx";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import config from "../../config.json";
+import { Link } from 'react-router-dom';
 
 const initialState = {
   studentName: "",
@@ -147,9 +148,18 @@ export default class StudentregComponent extends Component {
             name="hidnCrsId"
             readonly={true}
           />
-          <h3 className="mb-4">
-            <u>{courseName.toUpperCase()}</u>
-          </h3>
+          <div className="mb-4" style={{'display': 'flex'}}>
+            <h3>
+              <u>{courseName.toUpperCase()}</u>
+            </h3>
+            <Link className="nav-link" to={{
+                    pathname: "/participants/"+courseName,
+                    state: {
+                      courseId: this.courseID
+                    }
+                  }} >View Participants</Link>
+          </div>
+
           <Form.Group as={Row} controlId="formHorizontalStudentName">
             <Form.Label column sm={2}>
               Student Name:

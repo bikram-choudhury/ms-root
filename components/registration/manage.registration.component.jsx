@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import StudentregComponent from './studentreg.component.jsx';
 import NavComponent from './nav/nav.component.jsx';
 import config from '../../config.json';
+import ListRegistrationComponent from './list.registration.component.jsx';
 
 export default class ManageRregistrationComponent extends Component {
     constructor(props) {
@@ -35,6 +36,7 @@ export default class ManageRregistrationComponent extends Component {
                         </nav>
                         <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4 pt-2">
                             <Route exact path="/register/:courseName?" component={StudentregComponent} />
+                            <Route exact path="/participants/:courseName?" component={ListRegistrationComponent} />
                         </main>
                     </Router>
 
