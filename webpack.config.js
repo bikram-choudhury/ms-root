@@ -7,6 +7,11 @@ const config = {
         path: path.resolve(__dirname, 'public'),
         filename: 'index.js'
     },
+    devServer: {
+        inline: true,
+        port: 5000,
+        historyApiFallback: true
+    },
     module: {
         rules: [
             {
