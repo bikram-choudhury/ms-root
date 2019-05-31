@@ -35,7 +35,7 @@ export default class ManageRregistrationComponent extends Component {
                             <NavComponent courseList={this.state.courseList} />
                         </nav>
                         <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4 pt-2">
-                            <Route exact path="/register/:courseName?" component={StudentregComponent} />
+                            <Route exact path={["/register/:courseName?", "/participants/:courseName/:participant/edit"]} component={StudentregComponent} />
                             <Route exact path="/participants/:courseName?" component={ListRegistrationComponent} />
                         </main>
                     </Router>

@@ -35,7 +35,23 @@ export default class StudentregComponent extends Component {
     this.courseAPI = `${config.server.url}/api/enroll-candidate`;
     this.courseID = "";
   }
-
+  componentWillMount() {
+    if (this.props.location.state) {
+      const { courseId, participantDetails } = this.props.location.state;
+      if (participantDetails && participantDetails._id) {
+        const details = {
+          studentName: participantDetails.candidateName || '',
+          instituteName: participantDetails.instituteName || '',
+          mobileNumber: participantDetails.contact || '',
+          email: participantDetails.email || '',
+          batchType: participantDetails.batchType || '',
+          sessionDuration: participantDetails.sessionTimings || ''
+        };
+        this.setState({ ...details });
+      }
+    }
+  }
+  
   handleChange(event) {
     const name = event.target.getAttribute("name");
     const state = this.state;
@@ -133,12 +149,22 @@ export default class StudentregComponent extends Component {
 
     return true;
   }
+
   render() {
     const courseName =
       (this.props.match.params && this.props.match.params.courseName) || "";
     this.courseID =
       (this.props.location.state && this.props.location.state.courseId) || "";
     const enable = this.courseID ? false : true;
+    const participantsLink = this.courseID ? (
+      <Link className="nav-link" to={{
+        pathname: "/participants/" + courseName,
+        state: {
+          courseId: this.courseID
+        }
+      }} >View Participants</Link>
+    ) : '';
+
     return (
       <section>
         <Form onSubmit={this.handleSubmit}>
@@ -148,16 +174,11 @@ export default class StudentregComponent extends Component {
             name="hidnCrsId"
             readonly={true}
           />
-          <div className="mb-4" style={{'display': 'flex'}}>
+          <div className="mb-4" style={{ 'display': 'flex' }}>
             <h3>
               <u>{courseName.toUpperCase()}</u>
             </h3>
-            <Link className="nav-link" to={{
-                    pathname: "/participants/"+courseName,
-                    state: {
-                      courseId: this.courseID
-                    }
-                  }} >View Participants</Link>
+            {participantsLink}
           </div>
 
           <Form.Group as={Row} controlId="formHorizontalStudentName">
@@ -249,6 +270,7 @@ export default class StudentregComponent extends Component {
                   label="Week Days"
                   name="batchType"
                   value="weekdays"
+                  checked={this.state.batchType == 'weekdays'? true: false}
                   onChange={this.handleChange}
                   disabled={enable}
                 />
@@ -258,6 +280,7 @@ export default class StudentregComponent extends Component {
                   label="Week Ends"
                   name="batchType"
                   value="weekends"
+                  checked={this.state.batchType == 'weekends'? true: false}
                   onChange={this.handleChange}
                   disabled={enable}
                 />

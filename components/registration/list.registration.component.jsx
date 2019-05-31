@@ -12,6 +12,7 @@ export default class ListRegistrationComponent extends Component {
             participants: []
         }
         this.courseID = '';
+        this.courseName = '';
         this.courseAPI = `${config.server.url}/api/enroll-candidate`;
     }
     componentWillMount() {
@@ -29,15 +30,28 @@ export default class ListRegistrationComponent extends Component {
                 .catch(errorResponse => console.error(errorResponse))
         }
     }
+    handleEdit = (participantDetails) => {
+        if (!(participantDetails && participantDetails._id)) {
+            return false;
+        }
+        
+        this.props.history.push({
+            pathname: `/participants/${this.courseName}/${participantDetails._id}/edit`,
+            state: {
+                courseId: this.courseID,
+                participantDetails
+            }
+        })
+    }
     render() {
-        const courseName =
+        this.courseName =
             (this.props.match.params && this.props.match.params.courseName) || "";
         this.courseID =
             (this.props.location.state && this.props.location.state.courseId) || "";
         return (
             <section>
                 <h3>
-                    <u>Participants at {courseName.toUpperCase()}</u>
+                    <u>Participants at {this.courseName.toUpperCase()}</u>
                 </h3>
                 <div className="table-responsive">
                     <Table striped bordered hover>
@@ -69,7 +83,7 @@ export default class ListRegistrationComponent extends Component {
                                             <td className="nowrap">{participant.status}</td>
                                             <td className="nowrap">
                                                 <ButtonGroup aria-label="Toolbar with button groups">
-                                                    <Button variant="primary" className="mr-1">
+                                                    <Button variant="primary" className="mr-1" onClick={() => this.handleEdit(participant)}>
                                                         <i className="fas fa-edit"></i>
                                                     </Button>
                                                     <Button variant="danger" className="mr-1">

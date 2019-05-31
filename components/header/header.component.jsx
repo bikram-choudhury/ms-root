@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
-import { Link, NavLink} from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 export default class HeaderComponent extends Component {
     render() {
         return (
             <header>
                 <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-                    <Navbar.Brand href="#home">
+                    <Link to="/" className="navbar-brand">
                         <span>&#8730;</span>MS
-                    </Navbar.Brand>
+                    </Link>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
                         <Nav className="mr-auto">
