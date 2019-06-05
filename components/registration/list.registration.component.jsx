@@ -13,12 +13,12 @@ export default class ListRegistrationComponent extends Component {
         }
         this.courseID = '';
         this.courseName = '';
-        this.courseAPI = `${config.server.url}/api/enroll-candidate`;
+        this.enrollAPI = `${config.server.url}/api/enroll-candidate`;
     }
     componentWillMount() {
         const courseID = this.props.location.state && this.props.location.state.courseId || '';
         if (courseID) {
-            axios.get(`${this.courseAPI}/${courseID}`)
+            axios.get(`${this.enrollAPI}/${courseID}`)
                 .then(candiateListResponse => {
                     const participants = candiateListResponse.data;
                     if (participants && participants.length) {
@@ -42,6 +42,20 @@ export default class ListRegistrationComponent extends Component {
                 participantDetails
             }
         })
+    }
+    handleDelete = (participantId) => {
+        if (!participantId) {
+            return false;
+        }
+        axios.delete(`${this.enrollAPI}/${participantId}`)
+        .then(deleteResponse => {
+            const response = deleteResponse.data;
+            if (response && response.status) {
+                const participants = this.state.participants.filter((candidate) => candidate._id != participantId)
+                this.setState({participants: participants});
+            }
+        })
+        .catch(errorResponse => console.error(errorResponse))
     }
     render() {
         this.courseName =
@@ -86,7 +100,7 @@ export default class ListRegistrationComponent extends Component {
                                                     <Button variant="primary" className="mr-1" onClick={() => this.handleEdit(participant)}>
                                                         <i className="fas fa-edit"></i>
                                                     </Button>
-                                                    <Button variant="danger" className="mr-1">
+                                                    <Button variant="danger" className="mr-1" onClick={() => this.handleDelete(participant._id)}>
                                                         <i className="fas fa-trash-alt"></i>
                                                     </Button>
                                                     <Button variant="success">

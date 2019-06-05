@@ -109,6 +109,43 @@ router.route('/enroll-candidate')
         });
     }, format_service_data);
 
+router.route('/enroll-candidate/:enrollId')
+    .put((request, response, next) => {
+        const data = {... request.body};
+        checkIfStudentExist(data)
+            .then(isExist => {
+                if (!isExist) {
+                    next();
+                } else {
+                    const message = `Currently ${data.candidateName} is appearing the course in ${isExist.batchType} batch at ${sessionTimings}.`;
+                    res.status(500).send({ error: message });
+                }
+            }).catch(errorResponse => res.status(500).send(errorResponse));
+    }, (request, response, next) => {
+        const data = {... request.body};
+        const enrollId = request.params.enrollId;
+        enrollcandidates.findOneAndUpdate({_id: ObjectId(enrollId) , courseId: data.courseId}, data, {upsert: true, new: true}, (err, doc) => {
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                request.mongoObj = doc;
+                next();
+            }
+        })
+    }, format_service_data)
+    .delete((req, res) => {
+        const enrollId = req.params.enrollId;
+        if (enrollId) {
+            enrollcandidates.remove({_id: ObjectId(enrollId)}, (error, doc) => {
+                if (error) {
+                    res.status(500).send(error);
+                }
+                res.json({status: 'DELETED'});
+            })
+        }
+    })
+
+
 router.route('/enroll-candidate/:courseID')
     .get((req, res, next) => {
         const courseId = req.params.courseID;

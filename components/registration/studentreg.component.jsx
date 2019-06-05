@@ -30,10 +30,12 @@ export default class StudentregComponent extends Component {
     this.state = { ...initialState, alert: null };
     this.handleChange = this.handleChange.bind(this);
     this.handleSave = this.handleSave.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
     this.handleReset = this.handleReset.bind(this);
     this.validate = this.validate.bind(this);
     this.courseAPI = `${config.server.url}/api/enroll-candidate`;
     this.courseID = "";
+    this.editView = false;
   }
   componentWillMount() {
     if (this.props.location.state) {
@@ -48,6 +50,7 @@ export default class StudentregComponent extends Component {
           sessionDuration: participantDetails.sessionTimings || ''
         };
         this.setState({ ...details });
+        this.editView = true;
       }
     }
   }
@@ -81,6 +84,49 @@ export default class StudentregComponent extends Component {
         })
         .then(createResponse => {
           this.showAlert("success", "Details added Successfully!");
+        })
+        .catch(errorResponse => console.error(errorResponse))
+        .finally(() => this.handleReset());
+    } else {
+      this.showAlert("error", "Details should not be empty!");
+    }
+  }
+  handleUpdate() {
+    const studentName = this.state.studentName;
+    const instituteName = this.state.instituteName;
+    const mobileNumber = this.state.mobileNumber;
+    const email = this.state.email;
+    const batchType = this.state.batchType;
+    const sessionDuration = this.state.sessionDuration;
+    const participantId = this.props.match.params && this.props.match.params.participant || '';
+    if (this.validate()) {
+      axios
+        .put(`${this.courseAPI}/${participantId}`, {
+          candidateName: studentName,
+          instituteName: instituteName,
+          contact: mobileNumber,
+          email: email,
+          batchType: batchType,
+          sessionTimings: sessionDuration,
+          courseId: this.courseID
+        })
+        .then(updateResponse => {
+          this.showAlert("success", "Details saved Successfully!");
+          setTimeout(() => {
+            const courseName = this.props.match.params && this.props.match.params.courseName || ''
+            this.hideAlert();
+            if (courseName) {
+              this.props.history.push({
+                pathname: `/participants/${courseName}`,
+                state: {
+                    courseId: this.courseID
+                }
+            })
+              this.props.history.push();
+            } else {
+              this.props.history.push('/register');
+            }
+          },3 * 1000);
         })
         .catch(errorResponse => console.error(errorResponse))
         .finally(() => this.handleReset());
@@ -316,8 +362,8 @@ export default class StudentregComponent extends Component {
                 <ButtonComponent
                   type="button"
                   classList="btn btn-success"
-                  value="Save"
-                  onClick={this.handleSave}
+                  value={this.editView ? "Update": "Save"}
+                  onClick={this.editView ? this.handleUpdate :this.handleSave}
                   disabled={enable}
                 />
                 <ButtonComponent
