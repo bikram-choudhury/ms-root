@@ -110,21 +110,33 @@ router.route('/enroll-candidate')
     }, format_service_data);
 
 router.route('/enroll-candidate/:enrollId')
-    .put((request, response, next) => {
-        const data = {... request.body};
-        checkIfStudentExist(data)
-            .then(isExist => {
-                if (!isExist) {
-                    next();
+    .put((request, res, next) => {
+        const data = { ...request.body };
+        if (data.candidateName) {
+            checkIfStudentExist(data)
+                .then(isExist => {
+                    if (!isExist) {
+                        next();
+                    } else {
+                        const message = `Currently ${data.candidateName} is appearing the course in ${isExist.batchType} batch at ${sessionTimings}.`;
+                        res.status(500).send({ error: message });
+                    }
+                }).catch(errorResponse => res.status(500).send(errorResponse));
+        } else {
+            const enrollId = request.params.enrollId;
+            enrollcandidates.findOneAndUpdate({ _id: ObjectId(enrollId), courseId: data.courseId }, {"$set": {status: data.status}}, { new: true }, (err, doc) => {
+                if (err) {
+                    res.status(500).send(err);
                 } else {
-                    const message = `Currently ${data.candidateName} is appearing the course in ${isExist.batchType} batch at ${sessionTimings}.`;
-                    res.status(500).send({ error: message });
+                    res.status(200).json(doc);
                 }
-            }).catch(errorResponse => res.status(500).send(errorResponse));
+            })
+        }
+
     }, (request, response, next) => {
-        const data = {... request.body};
+        const data = { ...request.body };
         const enrollId = request.params.enrollId;
-        enrollcandidates.findOneAndUpdate({_id: ObjectId(enrollId) , courseId: data.courseId}, data, {upsert: true, new: true}, (err, doc) => {
+        enrollcandidates.findOneAndUpdate({ _id: ObjectId(enrollId), courseId: data.courseId }, data, { upsert: true, new: true }, (err, doc) => {
             if (err) {
                 res.status(500).send(err);
             } else {
@@ -136,11 +148,11 @@ router.route('/enroll-candidate/:enrollId')
     .delete((req, res) => {
         const enrollId = req.params.enrollId;
         if (enrollId) {
-            enrollcandidates.remove({_id: ObjectId(enrollId)}, (error, doc) => {
+            enrollcandidates.remove({ _id: ObjectId(enrollId) }, (error, doc) => {
                 if (error) {
                     res.status(500).send(error);
                 }
-                res.json({status: 'DELETED'});
+                res.json({ status: 'DELETED' });
             })
         }
     })
@@ -149,7 +161,7 @@ router.route('/enroll-candidate/:enrollId')
 router.route('/enroll-candidate/:courseID')
     .get((req, res, next) => {
         const courseId = req.params.courseID;
-        enrollcandidates.find({courseId: courseId}, null, { lean: true }, (err, candidateList) => {
+        enrollcandidates.find({ courseId: courseId }, null, { lean: true }, (err, candidateList) => {
             if (err) {
                 res.status(500).send(err);
             } else {

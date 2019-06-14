@@ -57,6 +57,22 @@ export default class ListRegistrationComponent extends Component {
         })
         .catch(errorResponse => console.error(errorResponse))
     }
+    changeStatus = (participantId, status) => {
+        if (!participantId) {
+            return false;
+        }
+        axios.put(`${this.enrollAPI}/${participantId}`, {courseId: this.courseID, status})
+        .then(successResponse => {
+            const participants = this.state.participants.map((partipant) => {
+                if (partipant._id === participantId) {
+                    partipant.status = successResponse.data.status
+                }
+                return partipant;
+            })
+            this.setState({participants})
+        })
+        .catch(errorResponse => console.log(successResponse))
+    }
     render() {
         this.courseName =
             (this.props.match.params && this.props.match.params.courseName) || "";
@@ -103,9 +119,18 @@ export default class ListRegistrationComponent extends Component {
                                                     <Button variant="danger" className="mr-1" onClick={() => this.handleDelete(participant._id)}>
                                                         <i className="fas fa-trash-alt"></i>
                                                     </Button>
-                                                    <Button variant="success">
-                                                        <i className="fas fa-check-circle"></i>
-                                                    </Button>
+                                                    {
+                                                        participant.status === 'completed'? (
+                                                            <Button variant="warning" onClick={() => this.changeStatus(participant._id, 'running')}>
+                                                                <i className="fas fa-history"></i>
+                                                            </Button>
+                                                        ): (
+                                                            <Button variant="success" onClick={() => this.changeStatus(participant._id, 'completed')}>
+                                                                <i className="fas fa-check-circle"></i>
+                                                            </Button>
+                                                        )
+                                                    }
+                                                    
 
                                                 </ButtonGroup>
                                             </td>
