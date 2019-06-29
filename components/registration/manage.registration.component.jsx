@@ -5,6 +5,7 @@ import StudentregComponent from './studentreg.component.jsx';
 import NavComponent from './nav/nav.component.jsx';
 import config from '../../config.json';
 import ListRegistrationComponent from './list.registration.component.jsx';
+import HeaderComponent from '../header/header.component.jsx';
 
 export default class ManageRregistrationComponent extends Component {
     constructor(props) {
@@ -28,21 +29,22 @@ export default class ManageRregistrationComponent extends Component {
     }
     render() {
         return (
-            <div className="container-fluid">
-                <div className="row">
-                    <Router>
-                        <nav className="col-md-2 d-none d-md-block bg-light sidebar">
-                            <NavComponent courseList={this.state.courseList} />
-                        </nav>
-                        <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4 pt-2">
-                            <Route exact path={["/register/:courseName?", "/participants/:courseName/:participant/edit"]} component={StudentregComponent} />
-                            <Route exact path="/participants/:courseName?" component={ListRegistrationComponent} />
-                        </main>
-                    </Router>
-
-
+            <section>
+                <HeaderComponent />
+                <div className="container-fluid">
+                    <div className="row">
+                        <Router>
+                            <nav className="col-md-2 d-none d-md-block bg-light sidebar">
+                                <NavComponent courseList={this.state.courseList} />
+                            </nav>
+                            <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4 pt-2">
+                                <Route exact path={["/register/:courseName?", "/participants/:courseName/:participant/edit"]} component={StudentregComponent} />
+                                <Route exact path="/participants/:courseName?" component={ListRegistrationComponent} />
+                            </main>
+                        </Router>
+                    </div>
                 </div>
-            </div>
+            </section>
         )
     }
 }
