@@ -4,6 +4,8 @@ import { Link, NavLink } from 'react-router-dom';
 
 export default class HeaderComponent extends Component {
     render() {
+        const user = localStorage.getItem('user');
+        const name = user && JSON.parse(user).name;
         return (
             <header>
                 <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -18,7 +20,7 @@ export default class HeaderComponent extends Component {
                             <Link to="/register" className="nav-link">Registration</Link>
                         </Nav>
                         <Navbar.Text>
-                            Signed in as: <a href="#login">Bikram Choudhury</a>
+                            Signed in as: <a href="#login">{name}</a>
                         </Navbar.Text>
                     </Navbar.Collapse>
                 </Navbar>

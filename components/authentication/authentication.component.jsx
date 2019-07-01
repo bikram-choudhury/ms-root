@@ -9,7 +9,9 @@ export default class AuthenticationComponent extends Component {
             loginView: true,
             registerView: false,
             resetView: false
-        }
+        };
+        this.toggleView = this.toggleView.bind(this);
+        this.authAPI = `${config.server.url}/api/user`;
     }
     toggleView(view) {
         switch(view) {
@@ -18,20 +20,22 @@ export default class AuthenticationComponent extends Component {
             case 'reset': this.setState({loginView: false, registerView: false, resetView: true}); break;
         }
     }
+    navigate2course = () => {
+        this.props.history.push('/course');
+    }
     render() {
         let currentView;
         if(this.state.loginView) {
-            currentView = <SignInComponent changeView={this.toggleView} />
+            currentView = <SignInComponent changeView={this.toggleView} authAPI={this.authAPI} navigate={this.navigate2course} />
         } else if(this.state.registerView) {
-            currentView = <ResetPasswordComponent changeView={this.toggleView} />
+            currentView = <SignUpComponent changeView={this.toggleView} authAPI={this.authAPI} />
         } else if(this.state.resetView) {
-            currentView = <SignUpComponent changeView={this.toggleView} />
+            currentView = <ResetPasswordComponent changeView={this.toggleView} authAPI={this.authAPI} />
         }
         return (
             <div id="logreg-forms">
                 {currentView} 
                 <br />
-
             </div>
         )
     }
@@ -44,7 +48,6 @@ class SignInComponent extends Component {
             username: '',
             password: ''
         };
-        this.authAPI = `${config.server.url}/api/user`;
     }
     handleChange = (event) => {
         const name = event.target.getAttribute('name');
@@ -56,11 +59,13 @@ class SignInComponent extends Component {
         const username = this.state.username;
         const password = this.state.password;
         if(username && password) {
-            axios.post(`${this.authAPI}/authenticate`, {
+            axios.post(`${this.props.authAPI}/authenticate`, {
                 username, password
             }).then(response => {
-                if(response.token) {
-                    this.props.history.push('/course');
+                const data = response.data;
+                if(data.token) {
+                    localStorage.setItem('user', JSON.stringify(data));
+                    this.props.navigate();
                 } else {
 
                 }
@@ -74,7 +79,7 @@ class SignInComponent extends Component {
                 <input type="text" className="form-control" placeholder="Username / Email address" required="" autoFocus="" name="username" value={this.state.username} onChange={this.handleChange} />
                 <input type="password"className="form-control" placeholder="Password" required="" name="password" value={this.state.password} onChange={this.handleChange} />
 
-                <button className="btn btn-success btn-block" type="button" onClick={this.handleLogin}>
+                <button className="btn btn-success btn-block" type="button" onClick={this.handleSignIn.bind(this)}>
                     <i className="fas fa-sign-in-alt"></i> Sign in</button>
                 <a href="javascript:void(0)" id="forgot_pswd" onClick={()=>this.props.changeView('reset')}>Forgot password?</a>
                 <hr />
@@ -97,6 +102,12 @@ class SignUpComponent extends Component {
             repeatpass: ''
         }
     }
+    handleChange = (event) => {
+        const name = event.target.getAttribute('name');
+        const state = this.state;
+        state[name] = event.target.value;
+        this.setState(state);
+    }
     handleSignUp = () => {
         const name = this.state.name;
         const email = this.state.email;
@@ -105,13 +116,13 @@ class SignUpComponent extends Component {
         const repeatpass = this.state.repeatpass;
 
         if(name && email && username && password && password === repeatpass) {
-            axios.post(`${this.authAPI}/register`, {
+            axios.post(`${this.props.authAPI}/register`, {
                 name, email, username, password
             }).then(response => {
                 if(response.error) {
 
                 } else if(response.status) {
-                    
+                    this.props.changeView('signin');
                 } else {
 
                 }
@@ -121,15 +132,15 @@ class SignUpComponent extends Component {
     render(){
         return (
             <form className="form-signup">
-                <input type="text" name="name" className="form-control" placeholder="Full name" required="" autoFocus="" value={this.state.name} />
-                <input type="text" name="username" className="form-control" placeholder="Full name" required="" autoFocus="" value={this.state.username} />
-                <input type="email" name="email" className="form-control" placeholder="Email address" required autoFocus="" value={this.state.email} />
-                <input type="password" name="password" className="form-control" placeholder="Password" required autoFocus="" value={this.state.password} />
-                <input type="password" name="repeatpass" className="form-control" placeholder="Repeat Password" required autoFocus="" value={this.state.repeatpass} />
+                <input type="text" name="name" className="form-control" placeholder="Full name" required="" autoFocus="" value={this.state.name} onChange={this.handleChange} />
+                <input type="text" name="username" className="form-control" placeholder="User name" required="" autoFocus="" value={this.state.username} onChange={this.handleChange} />
+                <input type="email" name="email" className="form-control" placeholder="Email address" required autoFocus="" value={this.state.email} onChange={this.handleChange} />
+                <input type="password" name="password" className="form-control" placeholder="Password" required autoFocus="" value={this.state.password} onChange={this.handleChange} />
+                <input type="password" name="repeatpass" className="form-control" placeholder="Repeat Password" required autoFocus="" value={this.state.repeatpass} onChange={this.handleChange} />
 
-                <button className="btn btn-primary btn-block" type="submit">
+                <button className="btn btn-primary btn-block" type="button" onClick={this.handleSignUp.bind(this)}>
                     <i className="fas fa-user-plus"></i> Sign Up</button>
-                <a href="javascript:void(0)" id="cancel_signup" onClick={()=>this.props.changeView('reset')}>
+                <a href="javascript:void(0)" id="cancel_signup" onClick={()=>this.props.changeView('signin')}>
                     <i className="fas fa-angle-left"></i> Back</a>
             </form>
         )
